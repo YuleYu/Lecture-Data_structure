@@ -1,0 +1,414 @@
+//Sort Algoithm compare
+//Created by Yule, Dec_31_2015
+//==============================================================================
+
+#include<iostream>
+#include<cstdlib>
+#include<ctime>
+#include<string>
+#include<vector>
+#include<queue>
+#include<algorithm>
+using namespace std;
+
+// define the number of digital in each array.
+#define MAX 10000
+
+int Squnc_Ran_[MAX]={0}, Squnc_Asd_[MAX]={0}, Squnc_Dsd_[MAX]={0}; 
+
+// create random sequence, ascending sequence, descending sequence.
+void generate_Squnc()
+{
+	srand(time(0));
+	for (int i=0; i<MAX; i++){
+		Squnc_Ran_[i] = rand();
+		Squnc_Asd_[i] = i;
+		Squnc_Dsd_[i] = MAX - i;
+	}
+} 
+
+// selection sort
+void Selection_Sort(const int array[], int n, string s)
+{
+	int pass, j, temp;
+	int arr[MAX];
+	memcpy(arr, array, MAX);
+	time_t begin = clock();
+     for (pass = 0; pass < n-1; pass++)	{
+		int smallIndex = pass;
+		for (j = pass+1; j < n; j++)
+			if (arr[j] < arr[smallIndex])
+				smallIndex = j;
+		if (smallIndex != pass){
+			temp = arr[pass];
+			arr[pass] = arr[smallIndex];
+			arr[smallIndex] = temp;
+		}
+    }
+   	time_t end = clock();
+   	cout<<"The "<<s<<" runtime:";
+  	cout<<1000*(double)(end - begin)/CLOCKS_PER_SEC<<endl;
+} 
+
+// exchange sort
+void Exchange_Sort(const int array[], int n, string s)
+{
+	int pass, i, temp;
+	int arr[MAX];
+	memcpy(arr, array, MAX);
+	time_t begin = clock();
+	for (pass = 0; pass < n-1; pass++)
+		for (i = pass; i < n; i++)
+			if (arr[pass] > arr[i+1]){
+				temp = arr[pass];
+				arr[pass] = arr[i+1];
+				arr[i+1] = temp;
+			}
+	cout<<"The "<<s<<" runtime:";
+	time_t end = clock();
+  	cout<<1000*(double)(end - begin)/CLOCKS_PER_SEC<<endl;
+}
+
+// solve bubble sort with vector
+void bubblesort(vector<int>& v)	
+{
+	int temp, n = v.size(), i, j;
+	bool exchange; 
+	for (i = 1; i < n; i++){ 	
+ 		exchange = false;
+   		for(j = 0; j < n-i; j++) 
+     		if(v[j] > v[j+1]){
+   				temp = v[j+1]; 
+       			v[j+1] = v[j];
+          		v[j] = temp;
+          		exchange = true;
+       		}
+	 if (!exchange) 
+	 	return;
+	}
+}
+
+// bubble sort
+void Bubble_Sort(const int array[], int n, string s)
+{
+	void bubblesort(vector<int>& v);
+	vector<int> v;
+	v.clear();
+	for (int i=0; i<MAX; i++)
+		v.push_back(array[i]);
+	time_t begin = clock();
+	bubblesort(v);
+	cout<<"The "<<s<<" runtime:";
+	time_t end = clock();
+  	cout<<1000*(double)(end - begin)/CLOCKS_PER_SEC<<endl;
+}
+
+// insert sort
+void Insert_Sort(const int array[], int n, string s)
+{
+	int i, j, temp;
+	int arr[MAX];
+	memcpy(arr, array, MAX);
+	time_t begin = clock();
+	for (i = 1; i < n; i++){
+		j = i;
+		temp = arr[i];
+		while (j > 0 && temp < arr[j-1]){ 
+	     			    arr[j] = arr[j-1];
+			         j--;
+			}
+			arr[j] = temp;
+	}
+	time_t end = clock();
+   	cout<<"The "<<s<<" runtime:";
+  	cout<<1000*(double)(end - begin)/CLOCKS_PER_SEC<<endl;
+}
+
+// quick sort
+void Quick_Sort(const int array[], int n, string s)
+{
+	void quicksort(int *v, int first, int last);
+	
+	int first = 0, last = MAX-1;
+	int arr[MAX];
+	memcpy(arr, array, MAX);
+	time_t begin = clock();
+	quicksort(arr, first, last);
+	time_t end = clock();
+   	cout<<"The "<<s<<" runtime:";
+  	cout<<1000*(double)(end - begin)/CLOCKS_PER_SEC<<endl;
+}
+
+void quicksort(int *v, int first, int last)
+{
+	int pivotIndex(int *v, int first, int last);
+	
+	int pivotLoc;
+	int temp;
+	if (last - first <= 1)
+		return;
+	else if (last - first == 2){
+		if (v[last-1] < v[first]){
+			temp = v[last-1];
+			v[last-1] = v[first];
+			v[first] = temp;
+		}
+		return;	
+	}
+	else{
+		pivotLoc = pivotIndex(v, first, last);
+		quicksort(v, first, pivotLoc);
+		quicksort(v, pivotLoc +1, last);
+	}
+}
+
+int pivotIndex(int *v, int first, int last)
+{
+	int mid, scanUp, scanDown;
+	int pivot, temp;
+	if (first == last)	
+		return last;
+	else if (first == last-1)	
+		return first;
+	else{
+		mid = (last + first)/2;
+		pivot = v[mid];
+		v[mid] = v[first];
+		v[first] = pivot;
+		scanUp = first + 1;
+		scanDown = last - 1;
+		while(scanUp<scanDown)
+		{
+			while (scanUp <= scanDown && v[scanUp] <= pivot)
+				scanUp++;
+			while (scanUp <= scanDown && pivot <= v[scanDown])
+				scanDown--;
+			if (scanUp < scanDown){
+				temp = v[scanUp];
+				v[scanUp] = v[scanDown];
+				v[scanDown] = temp;
+			}
+		}
+		v[first] = v[scanDown];
+		v[scanDown] = pivot;
+		return scanDown;
+	}
+}
+
+// merge sort
+void Merge_Sort(const int array[], int n, string s)
+{
+	void mergesort(vector<int>& v, int first, int last);
+	vector<int> v;
+	v.clear();
+	for (int i=0; i<MAX; i++)
+		v.push_back(array[i]);
+	time_t begin = clock();
+	mergesort(v, 0, MAX-1);
+	cout<<"The "<<s<<" runtime:";
+	time_t end = clock();
+  	cout<<1000*(double)(end - begin)/CLOCKS_PER_SEC<<endl;
+}
+
+
+void mergesort(vector<int>& v, int first, int last)
+{
+	void merge(vector<int>& v, int first, int mid, int last);
+	if (first + 1 < last){
+		int midpt = (last + first) / 2;
+
+		mergesort(v, first, midpt);
+		mergesort(v, midpt, last);
+		merge(v, first, midpt, last);
+  	}
+}
+
+void merge(vector<int>& v, int first, int mid, int last)
+{
+	vector<int> tempVector;
+	int indexA, indexB, indexV;
+	indexA = first;
+	indexB = mid;
+	while (indexA < mid && indexB < last)
+		if (v[indexA] < v[indexB]){	
+			tempVector.push_back(v[indexA]);
+			indexA++;
+		}
+		else{	
+			tempVector.push_back(v[indexB]);
+			indexB++;		
+		}
+	while (indexA < mid){
+		tempVector.push_back(v[indexA]);
+		indexA++;
+	}
+	while (indexB < last){
+		tempVector.push_back(v[indexB]);
+		indexB++;
+	}
+	indexA = first;
+	for (indexV = 0; indexV < tempVector.size(); indexV++){
+		v[indexA] = tempVector [indexV];
+		indexA++;
+	}
+}
+
+void HeapAdjust(int *a,int i,int size)  
+{
+    int lchild=2*i; 
+    int rchild=2*i+1;
+    int max=i;
+    if(i<=size/2){
+        if(lchild<=size&&a[lchild]>a[max])
+            max=lchild;  
+        if(rchild<=size&&a[rchild]>a[max])
+            max=rchild;
+        if(max!=i){
+            swap(a[i],a[max]);
+            HeapAdjust(a,max,size);     
+        }
+    }        
+}
+
+void BuildHeap(int *a,int size)  
+{
+	void HeapAdjust(int *a,int i,int size);
+	
+    int i;
+    for(i=size/2;i>=1;i--) 
+        HeapAdjust(a,i,size);     
+} 
+
+void heapsort(int *a,int size)  
+{
+	void BuildHeap(int *a,int size);
+	void HeapAdjust(int *a,int i,int size);
+	
+    int i;
+    BuildHeap(a,size);
+    for(i=size;i>=1;i--)
+    {
+        swap(a[1],a[i]);        
+        HeapAdjust(a,1,i-1);  
+    }
+} 
+
+// heap sort
+void Heap_Sort(const int array[], int n, string s)
+{
+	void heapsort(int *a,int size);
+	int arr[MAX];
+	memcpy(arr, array, MAX);
+	time_t begin = clock();
+	heapsort(arr,MAX);
+	cout<<"The "<<s<<" runtime:";
+	time_t end = clock();
+  	cout<<1000*(double)(end - begin)/CLOCKS_PER_SEC<<endl;
+}
+
+void distribute(const vector<int>& v, queue<int> digitQueue[], int power)
+{
+	int i;
+	for (i = 0; i < v.size(); i++)
+		digitQueue[(v[i] / power) % 10].push(v[i]);
+}
+
+void collect(queue<int> digitQueue[], vector<int>& v)
+{
+	int i = 0, digit;
+	for (digit = 0; digit < 10; digit++)
+		while (!digitQueue[digit].empty())
+		{
+			v[i] = digitQueue[digit].front();
+			digitQueue[digit].pop();
+			i++;
+		}
+}
+
+void radixSort(vector<int>& v, int d)
+{
+	int i;
+	int power = 1;
+	queue<int> digitQueue[10];
+
+	for (i=0;i < d;i++)
+	{
+		distribute(v, digitQueue, power);
+		collect(digitQueue, v);
+		power *= 10;
+	}
+}
+
+// radix sort
+void Radix_Sort(const int array[], int n, string s)
+{
+	time_t begin = clock();
+	vector<int> v;
+	v.clear();
+	for (int i=0; i<MAX; i++)
+		v.push_back(array[i]);
+	radixSort(v, 5);
+	cout<<"The "<<s<<" runtime:";
+	time_t end = clock();
+  	cout<<1000*(double)(end - begin)/CLOCKS_PER_SEC<<endl;
+}
+
+
+int main()
+{
+	void generate_Squnc();
+	void Selection_Sort(const int array[], int n, string s);
+	void Exchange_Sort(const int array[], int n, string s);
+	void Bubble_Sort(const int array[], int n, string s);
+	void Insert_Sort(const int array[], int n, string s);
+	void Quick_Sort(const int array[], int n, string s);
+	void Merge_Sort(const int array[], int n, string s);
+	void Heap_Sort(const int array[], int n, string s);
+	void Radix_Sort(const int array[], int n, string s);
+	
+	generate_Squnc();
+	
+	cout<<"selection sort:"<<endl; 
+	Selection_Sort(Squnc_Asd_, MAX, "ascending sequence ");
+	Selection_Sort(Squnc_Dsd_, MAX, "descending sequence");
+	Selection_Sort(Squnc_Ran_, MAX, "  ramdom  sequence ");
+	cout<<endl;	
+	cout<<"exchange sort:"<<endl;
+	Exchange_Sort(Squnc_Asd_, MAX, "ascending sequence ");
+	Exchange_Sort(Squnc_Dsd_, MAX, "descending sequence");
+	Exchange_Sort(Squnc_Ran_, MAX, "  ramdom  sequence ");
+	cout<<endl;
+	cout<<"bubble sort:"<<endl;
+	Bubble_Sort(Squnc_Asd_, MAX, "ascending sequence ");
+	Bubble_Sort(Squnc_Dsd_, MAX, "descending sequence");
+	Bubble_Sort(Squnc_Ran_, MAX, "  ramdom  sequence ");
+	cout<<endl;
+	cout<<"insert sort:"<<endl;
+	Insert_Sort(Squnc_Asd_, MAX, "ascending sequence ");
+	Insert_Sort(Squnc_Dsd_, MAX, "descending sequence");
+	Insert_Sort(Squnc_Ran_, MAX, "  ramdom  sequence ");
+	cout<<endl;
+	cout<<"quick sort:"<<endl;
+	Quick_Sort(Squnc_Asd_, MAX, "ascending sequence ");
+	Quick_Sort(Squnc_Dsd_, MAX, "descending sequence");
+	Quick_Sort(Squnc_Ran_, MAX, "  ramdom  sequence ");
+	cout<<endl;
+	cout<<"merge sort:"<<endl;
+	Merge_Sort(Squnc_Asd_, MAX, "ascending sequence ");
+	Merge_Sort(Squnc_Dsd_, MAX, "descending sequence");
+	Merge_Sort(Squnc_Ran_, MAX, "  ramdom  sequence ");
+	cout<<endl;
+	cout<<"heap sort:"<<endl;
+	Heap_Sort(Squnc_Asd_, MAX, "ascending sequence ");
+	Heap_Sort(Squnc_Dsd_, MAX, "descending sequence");
+	Heap_Sort(Squnc_Ran_, MAX, "  ramdom  sequence ");
+	cout<<endl;	
+	cout<<"radix sort:"<<endl;
+	Radix_Sort(Squnc_Asd_, MAX, "ascending sequence ");
+	Radix_Sort(Squnc_Dsd_, MAX, "descending sequence");
+	Radix_Sort(Squnc_Ran_, MAX, "  ramdom  sequence ");
+	cout<<endl;
+	
+	system("pause");
+	return 0;
+}
